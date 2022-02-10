@@ -4,7 +4,7 @@ Goals: In this assignment, you will explore the types of loss and decoder functi
 
 ## 0. Setup
 
-Please download and extract the dataset from [here](https://drive.google.com/drive/folders/1mfvWSXI2bHjyZ8kQWCp9MWEWjTqV9lw4?usp=sharing).
+Please download and extract the dataset from [here](https://drive.google.com/file/d/1vbxbSgpBMwqWYhniAyMh590ire8zzeV7/view?usp=sharing).
 After unzipping, set the appropiate path references in `dataset_location.py` file [here](https://github.com/learning3d/a2_internal/blob/4d3e93c4e391711559ee9b506cccba412d59ddbd/dataset_location.py#L2)
 
 Make sure you have installed the packages mentioned in `requirements.txt`.
