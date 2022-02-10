@@ -11,8 +11,6 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import random
 
-import ipdb 
-st = ipdb.set_trace
 
 import numpy as np
 import torch
@@ -30,8 +28,7 @@ from pytorch3d.datasets.r2n2.utils import (
     voxelize,
 )
 import utils_vox
-import ipdb
-st = ipdb.set_trace
+
 
 SYNSET_DICT_DIR = Path(utils.__file__).resolve().parent
 MAX_CAMERA_DISTANCE = 1.75  # Constant from R2N2.
