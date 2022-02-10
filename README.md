@@ -25,7 +25,7 @@ Visualize the optimized voxel grid along-side the ground truth voxel grid using 
 ### 1.2. Fitting a point cloud (10 points)
 In this subsection, we will define chamfer loss that can help us <b> fit a 3D point cloud </b>.
 Define the loss functions [here](https://github.com/learning3d/a2_internal/blob/037b19c92e7f2ed41edd4e4667c66360998a7f32/losses.py#L10) in `losses.py` file.
-<b>We expect the you to write your own code for this and not use any pytorch3d utilities. You are allowed to use functions inside pytorch3d.ops.knn such as knn_gather or knn_points</b>
+<b>We expect you to write your own code for this and not use any pytorch3d utilities. You are allowed to use functions inside pytorch3d.ops.knn such as knn_gather or knn_points</b>
 
 Run the file `python fit_data.py --type 'point'`, to fit the source point cloud to the target point cloud. 
 
