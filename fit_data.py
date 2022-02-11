@@ -42,7 +42,7 @@ def fit_mesh(mesh_src, mesh_tgt, args):
         sample_src = sample_points_from_meshes(new_mesh_src, args.n_points)
 
         loss_reg = losses.chamfer_loss(sample_src, sample_trg)
-        loss_smooth = losses.mesh_laplacian_smoothing(new_mesh_src)
+        loss_smooth = losses.smoothness_loss(new_mesh_src)
 
         loss = args.w_chamfer * loss_reg + args.w_smooth * loss_smooth
 

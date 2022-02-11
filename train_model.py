@@ -54,7 +54,7 @@ def calculate_loss(predictions, ground_truth, args):
         sample_pred = sample_points_from_meshes(predictions, args.n_points)
 
         loss_reg = losses.chamfer_loss(sample_pred, sample_trg)
-        loss_smooth = losses.mesh_laplacian_smoothing(predictions)
+        loss_smooth = losses.smoothness_loss(predictions)
 
         loss = args.w_chamfer * loss_reg + args.w_smooth * loss_smooth        
     return loss
