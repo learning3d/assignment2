@@ -51,7 +51,7 @@ Define the decoder network [here](https://github.com/learning3d/assignment2/blob
 Run the file `python train_model.py --type 'vox'`, to train single view to voxel grid pipeline, feel free to tune the hyperparameters as per your need.
 
 After trained, visualize the input RGB, ground truth voxel grid and predicted voxel in `eval_model.py` file using:
-`python eval_model.py --type 'vox'`
+`python eval_model.py --type 'vox' --load_checkpoint`
 
 You need to add the respective visualization code in `eval_model.py`
 
@@ -64,7 +64,7 @@ Similar as above, define the decoder network [here](https://github.com/learning3
 Run the file `python train_model.py --type 'point'`, to train single view to pointcloud pipeline, feel free to tune the hyperparameters as per your need.
 
 After trained, visualize the input RGB, ground truth point cloud and predicted  point cloud in `eval_model.py` file using:
-`python eval_model.py --type 'point'`
+`python eval_model.py --type 'point' --load_checkpoint`
 
 You need to add the respective visualization code in `eval_model.py`.
 
@@ -79,7 +79,7 @@ Run the file `python train_model.py --type 'mesh'`, to train single view to mesh
 
 
 After trained, visualize the input RGB, ground truth mesh and predicted mesh in `eval_model.py` file using:
-`python eval_model.py --type 'mesh'`
+`python eval_model.py --type 'mesh' --load_checkpoint`
 
 You need to add the respective visualization code in `eval_model.py`.
 
@@ -90,7 +90,7 @@ Quantitatively compare the F1 score of 3D reconstruction for meshes vs pointclou
 Provide an intutive explaination justifying the comparision.
 
 For evaluating you can run:
-`python eval_model.py --type voxel|mesh|point`
+`python eval_model.py --type voxel|mesh|point --load_checkpoint`
 
 
 On your webpage, you should include the average test F1 score at 0.05 threshold for voxelgrid, pointcloud and the mesh network.
