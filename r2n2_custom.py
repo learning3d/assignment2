@@ -343,7 +343,6 @@ class R2N2(ShapeNetBase):  # pragma: no cover
             #     # Convert voxel coordinates of shape (N, 3) to voxels of shape (D, D, D).
             #     voxels = voxelize(voxel_coords, P, VOXEL_SIZE)
             #     voxels_list.append(voxels)
-            voxels = voxels.permute(0,3,2,1)
             model["voxels"] = voxels
         num_views = model['images'].shape[0]
         rand_view = random.randint(0,num_views-1)

@@ -131,6 +131,9 @@ def evaluate_model(args):
 
         predictions = model(images_gt, args)
 
+        if args.type == "vox":
+            predictions = predictions.permute(0,1,4,3,2)
+
         metrics = evaluate(predictions, mesh_gt, args)
 
         # TODO:
