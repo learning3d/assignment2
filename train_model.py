@@ -27,8 +27,6 @@ def get_args_parser():
     return parser
 
 def preprocess(feed_dict,args):
-    for k in ['images','voxels','mesh']:
-        feed_dict[k] = feed_dict[k].cuda()
     images = feed_dict['images'].squeeze(1)
     if args.type == "vox":
         voxels = feed_dict['voxels'].float()
@@ -39,7 +37,7 @@ def preprocess(feed_dict,args):
         ground_truth_3d = pointclouds_tgt        
     elif args.type == "mesh":
         ground_truth_3d = feed_dict["mesh"]
-    return images, ground_truth_3d
+    return images.cuda(), ground_truth_3d.cuda()
 
 
 
