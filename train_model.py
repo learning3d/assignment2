@@ -23,6 +23,8 @@ def get_args_parser():
     parser.add_argument('--w_chamfer', default=1.0, type=float)
     parser.add_argument('--w_smooth', default=0.1, type=float)
     parser.add_argument('--save_freq', default=10000, type=int)    
+    parser.add_argument('--device', default='cuda', type=str) 
+    parser.add_argument('--load_feat', action='store_true') 
     parser.add_argument('--load_checkpoint', action='store_true')            
     return parser
 
@@ -37,7 +39,11 @@ def preprocess(feed_dict,args):
         ground_truth_3d = pointclouds_tgt        
     elif args.type == "mesh":
         ground_truth_3d = feed_dict["mesh"]
-    return images.cuda(), ground_truth_3d.cuda()
+    if args.load_feat:
+        feats = torch.stack(feed_dict['feats'])
+        return feats.to(args.device), ground_truth_3d.to(args.device)
+    else:
+        return images.to(args.device), ground_truth_3d.to(args.device)
 
 
 
@@ -59,7 +65,7 @@ def calculate_loss(predictions, ground_truth, args):
 
 
 def train_model(args):
-    r2n2_dataset = R2N2("train", dataset_location.SHAPENET_PATH, dataset_location.R2N2_PATH, dataset_location.SPLITS_PATH, return_voxels=True)
+    r2n2_dataset = R2N2("train", dataset_location.SHAPENET_PATH, dataset_location.R2N2_PATH, dataset_location.SPLITS_PATH, return_voxels=True, return_feats=args.load_feat)
 
     loader = torch.utils.data.DataLoader(
         r2n2_dataset,
@@ -71,7 +77,7 @@ def train_model(args):
     train_loader = iter(loader)
 
     model =  SingleViewto3D(args)
-    model.cuda()
+    model.to(args.device)
     model.train()
 
     # ============ preparing optimizer ... ============

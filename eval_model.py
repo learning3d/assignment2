@@ -10,6 +10,7 @@ from pytorch3d.ops import sample_points_from_meshes
 from pytorch3d.ops import knn_points
 import mcubes
 import utils_vox
+import matplotlib.pyplot as plt 
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Singleto3D', add_help=False)
@@ -23,18 +24,32 @@ def get_args_parser():
     parser.add_argument('--w_chamfer', default=1.0, type=float)
     parser.add_argument('--w_smooth', default=0.1, type=float)  
     parser.add_argument('--load_checkpoint', action='store_true')  
+    parser.add_argument('--device', default='cuda', type=str) 
+    parser.add_argument('--load_feat', action='store_true') 
     return parser
 
-def preprocess(feed_dict):
+def preprocess(feed_dict, args):
     for k in ['images']:
-        feed_dict[k] = feed_dict[k].cuda()
+        feed_dict[k] = feed_dict[k].to(args.device)
 
     images = feed_dict['images'].squeeze(1)
     mesh = feed_dict['mesh']
+    if args.load_feat:
+        images = torch.stack(feed_dict['feats']).to(args.device)
 
     return images, mesh
 
-def compute_sampling_metrics(pred_points, gt_points, thresholds= [0.01, 0.02, 0.03, 0.04, 0.05], eps=1e-8):
+def save_plot(thresholds, avg_f1_score, args):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot(thresholds, avg_f1_score, marker='o')
+    ax.set_xlabel('Threshold')
+    ax.set_ylabel('F1-score')
+    ax.set_title(f'Evaluation {args.type}')
+    plt.savefig(f'eval_{args.type}', bbox_inches='tight')
+
+
+def compute_sampling_metrics(pred_points, gt_points, thresholds, eps=1e-8):
     metrics = {}
     lengths_pred = torch.full(
         (pred_points.shape[0],), pred_points.shape[1], dtype=torch.int64, device=pred_points.device
@@ -68,7 +83,7 @@ def compute_sampling_metrics(pred_points, gt_points, thresholds= [0.01, 0.02, 0.
     metrics = {k: v.cpu() for k, v in metrics.items()}
     return metrics
 
-def evaluate(predictions, mesh_gt, args):
+def evaluate(predictions, mesh_gt, thresholds, args):
     if args.type == "vox":
         voxels_src = predictions
         H,W,D = voxels_src.shape[2:]
@@ -84,14 +99,14 @@ def evaluate(predictions, mesh_gt, args):
         pred_points = sample_points_from_meshes(predictions, args.n_points).cpu()
 
     gt_points = sample_points_from_meshes(mesh_gt, args.n_points)
-        
-    metrics = compute_sampling_metrics(pred_points, gt_points)
+    
+    metrics = compute_sampling_metrics(pred_points, gt_points, thresholds)
     return metrics
 
 
 
 def evaluate_model(args):
-    r2n2_dataset = R2N2("test", dataset_location.SHAPENET_PATH, dataset_location.R2N2_PATH, dataset_location.SPLITS_PATH, return_voxels=True)
+    r2n2_dataset = R2N2("test", dataset_location.SHAPENET_PATH, dataset_location.R2N2_PATH, dataset_location.SPLITS_PATH, return_voxels=True, return_feats=args.load_feat)
 
     loader = torch.utils.data.DataLoader(
         r2n2_dataset,
@@ -103,13 +118,18 @@ def evaluate_model(args):
     eval_loader = iter(loader)
 
     model =  SingleViewto3D(args)
-    model.cuda()
+    model.to(args.device)
     model.eval()
 
     start_iter = 0
     start_time = time.time()
 
+    thresholds = [0.01, 0.02, 0.03, 0.04, 0.05]
+
+    avg_f1_score_05 = []
     avg_f1_score = []
+    avg_p_score = []
+    avg_r_score = []
 
     if args.load_checkpoint:
         checkpoint = torch.load(f'checkpoint_{args.type}.pth')
@@ -125,7 +145,7 @@ def evaluate_model(args):
 
         feed_dict = next(eval_loader)
 
-        images_gt, mesh_gt = preprocess(feed_dict)
+        images_gt, mesh_gt = preprocess(feed_dict, args)
 
         read_time = time.time() - read_start_time
 
@@ -134,7 +154,7 @@ def evaluate_model(args):
         if args.type == "vox":
             predictions = predictions.permute(0,1,4,3,2)
 
-        metrics = evaluate(predictions, mesh_gt, args)
+        metrics = evaluate(predictions, mesh_gt, thresholds, args)
 
         # TODO:
         # if (step % args.vis_freq) == 0:
@@ -147,11 +167,17 @@ def evaluate_model(args):
         iter_time = time.time() - iter_start_time
 
         f1_05 = metrics['F1@0.050000']
+        avg_f1_score_05.append(f1_05)
+        avg_p_score.append(torch.tensor([metrics["Precision@%f" % t] for t in thresholds]))
+        avg_r_score.append(torch.tensor([metrics["Recall@%f" % t] for t in thresholds]))
+        avg_f1_score.append(torch.tensor([metrics["F1@%f" % t] for t in thresholds]))
 
-        avg_f1_score.append(f1_05)
+        print("[%4d/%4d]; ttime: %.0f (%.2f, %.2f); F1@0.05: %.3f; Avg F1@0.05: %.3f" % (step, max_iter, total_time, read_time, iter_time, f1_05, torch.tensor(avg_f1_score_05).mean()))
+    
 
-        print("[%4d/%4d]; ttime: %.0f (%.2f, %.2f); F1@0.05: %.3f; Avg F1@0.05: %.3f" % (step, max_iter, total_time, read_time, iter_time, f1_05, torch.tensor(avg_f1_score).mean()))
+    avg_f1_score = torch.stack(avg_f1_score).mean(0)
 
+    save_plot(thresholds, avg_f1_score,  args)
     print('Done!')
 
 if __name__ == '__main__':

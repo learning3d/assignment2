@@ -24,13 +24,14 @@ def get_args_parser():
     parser.add_argument('--n_points', default=5000, type=int)
     parser.add_argument('--w_chamfer', default=1.0, type=float)
     parser.add_argument('--w_smooth', default=0.1, type=float)
+    parser.add_argument('--device', default='cuda', type=str) 
     return parser
 
 def fit_mesh(mesh_src, mesh_tgt, args):
     start_iter = 0
     start_time = time.time()
 
-    deform_vertices_src = torch.zeros(mesh_src.verts_packed().shape,requires_grad=True,device='cuda')
+    deform_vertices_src = torch.zeros(mesh_src.verts_packed().shape, requires_grad=True, device='cuda')
     optimizer = torch.optim.Adam([deform_vertices_src], lr = args.lr)
     print("Starting training !")
     for step in range(start_iter, args.max_iter):
@@ -60,10 +61,6 @@ def fit_mesh(mesh_src, mesh_tgt, args):
     mesh_src.offset_verts_(deform_vertices_src)
 
     print('Done!')
-
-
-    
-
 
 
 def fit_pointcloud(pointclouds_src, pointclouds_tgt, args):
@@ -122,12 +119,12 @@ def train_model(args):
     feed_cuda = {}
     for k in feed:
         if torch.is_tensor(feed[k]):
-            feed_cuda[k] = feed[k].cuda().float()
+            feed_cuda[k] = feed[k].to(args.device).float()
 
 
     if args.type == "vox":
         # initialization
-        voxels_src = torch.rand(feed_cuda['voxels'].shape,requires_grad=True,device='cuda')
+        voxels_src = torch.rand(feed_cuda['voxels'].shape,requires_grad=True, device=args.device)
         voxel_coords = feed_cuda['voxel_coords'].unsqueeze(0)
         voxels_tgt = feed_cuda['voxels']
 
@@ -137,7 +134,7 @@ def train_model(args):
 
     elif args.type == "point":
         # initialization
-        pointclouds_src = torch.randn([1,args.n_points,3],requires_grad=True,device='cuda')
+        pointclouds_src = torch.randn([1,args.n_points,3],requires_grad=True, device=args.device)
         mesh_tgt = Meshes(verts=[feed_cuda['verts']], faces=[feed_cuda['faces']])
         pointclouds_tgt = sample_points_from_meshes(mesh_tgt, args.n_points)
 
@@ -147,7 +144,7 @@ def train_model(args):
     elif args.type == "mesh":
         # initialization
         # try different ways of initializing the source mesh        
-        mesh_src = ico_sphere(4,'cuda')
+        mesh_src = ico_sphere(4, args.device)
         mesh_tgt = Meshes(verts=[feed_cuda['verts']], faces=[feed_cuda['faces']])
 
         # fitting

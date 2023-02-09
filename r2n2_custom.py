@@ -15,7 +15,7 @@ import random
 import numpy as np
 import torch
 from PIL import Image
-from pytorch3d.common.types import Device
+from pytorch3d.common.datatypes import Device
 from pytorch3d.datasets.shapenet_base import ShapeNetBase
 from pytorch3d.renderer import HardPhongShader
 from tabulate import tabulate
@@ -63,6 +63,7 @@ class R2N2(ShapeNetBase):  # pragma: no cover
         splits_file,
         return_all_views: bool = True,
         return_voxels: bool = False,
+        return_feats=False,
         views_rel_path: str = "ShapeNetRendering",
         voxels_rel_path: str = "ShapeNetVoxels",
         load_textures: bool = False,
@@ -81,6 +82,8 @@ class R2N2(ShapeNetBase):  # pragma: no cover
                 selected and loaded.
             return_voxels(bool): Indicator of whether or not to return voxels as a tensor
                 of shape (D, D, D) where D is the number of voxels along each dimension.
+            return_feats(bool): Indicator of whether image features from a pretrained resnet18 
+                are also returned in the dataloader or not
             views_rel_path: path to rendered views within the r2n2_dir. If not specified,
                 the renderings are assumed to be at os.path.join(rn2n_dir, "ShapeNetRendering").
             voxels_rel_path: path to rendered views within the r2n2_dir. If not specified,
@@ -99,6 +102,7 @@ class R2N2(ShapeNetBase):  # pragma: no cover
         self.voxels_rel_path = voxels_rel_path
         self.load_textures = load_textures
         self.texture_resolution = texture_resolution
+        self.return_feats = return_feats
         # Examine if split is valid.
         if split not in ["train", "val", "test"]:
             raise ValueError("split has to be one of (train, val, test).")
@@ -267,7 +271,7 @@ class R2N2(ShapeNetBase):  # pragma: no cover
         model["label"] = self.synset_dict[model["synset_id"]]
 
         model["images"] = None
-        images, Rs, Ts, voxel_RTs = [], [], [], []
+        images, feats, Rs, Ts, voxel_RTs = [], [], [], [], []
         # Retrieve R2N2's renderings if required.
         if self.return_images:
             rendering_path = path.join(
@@ -277,6 +281,7 @@ class R2N2(ShapeNetBase):  # pragma: no cover
                 model["model_id"],
                 "rendering",
             )
+            all_feats = torch.from_numpy(np.load(path.join(rendering_path, "feats.npy")))
             # Read metadata file to obtain params for calibration matrices.
             with open(path.join(rendering_path, "rendering_metadata.txt"), "r") as f:
                 metadata_lines = f.readlines()
@@ -286,6 +291,7 @@ class R2N2(ShapeNetBase):  # pragma: no cover
                 raw_img = Image.open(image_path)
                 image = torch.from_numpy(np.array(raw_img) / 255.0)[..., :3]
                 images.append(image.to(dtype=torch.float32))
+                feats.append(all_feats[i].to(dtype=torch.float32))
 
                 # Get camera calibration.
                 azim, elev, yaw, dist_ratio, fov = [
@@ -314,6 +320,8 @@ class R2N2(ShapeNetBase):  # pragma: no cover
             model["R"] = torch.stack(Rs)
             model["T"] = torch.stack(Ts)
             model["K"] = K.expand(len(model_views), 4, 4)
+            if self.return_feats:
+                model["feats"] = torch.stack(feats)
 
         voxels_list = []
 
@@ -351,6 +359,9 @@ class R2N2(ShapeNetBase):  # pragma: no cover
         model['R'] = model['R'][rand_view]
         model['T'] = model['T'][rand_view]
         model['K'] = model['K'][rand_view]
+        if self.return_feats:
+            model["feats"] = model["feats"][rand_view]
+
         
         return model
 
