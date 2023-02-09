@@ -63,7 +63,7 @@ class R2N2(ShapeNetBase):  # pragma: no cover
         splits_file,
         return_all_views: bool = True,
         return_voxels: bool = False,
-        return_feats=False,
+        return_feats: bool = False,
         views_rel_path: str = "ShapeNetRendering",
         voxels_rel_path: str = "ShapeNetVoxels",
         load_textures: bool = False,
