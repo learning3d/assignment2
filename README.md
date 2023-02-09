@@ -45,7 +45,7 @@ Visualize the optimized mesh along-side the ground truth mesh using the tools le
 This section will involve training a single view to 3D pipeline for voxels, point clouds and meshes.
 Refer to the `save_freq` argument in `train_model.py` to save the model checkpoint quicker/slower. 
 
-We also provide pretrained ResNet18 features of images to save computation and GPU resources required. Use `--load_feat` argument to use these features during training and evaluation. This should be False by default, and only use this if you are facing issues in getting GPU resources. You can also enable training on a CPU by the `device` argument.
+We also provide pretrained ResNet18 features of images to save computation and GPU resources required. Use `--load_feat` argument to use these features during training and evaluation. This should be False by default, and only use this if you are facing issues in getting GPU resources. You can also enable training on a CPU by the `device` argument. Also indiciate in your submission if you had to use this argument. 
 
 ### 2.1. Image to voxel grid (20 points)
 In this subsection, we will define a neural network to decode binary voxel grids.
