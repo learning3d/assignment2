@@ -1,4 +1,4 @@
-# 16-889 Assignment 2: Single View to 3D
+# 16-825 Assignment 2: Single View to 3D
 
 Goals: In this assignment, you will explore the types of loss and decoder functions for regressing to voxels, point clouds, and mesh representation from single view RGB input. 
 
