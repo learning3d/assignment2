@@ -96,7 +96,7 @@ For evaluating you can run:
 `python eval_model.py --type voxel|mesh|point --load_checkpoint`
 
 
-On your webpage, you should include the precision recall curve at different thresholds for voxelgrid, pointcloud and the mesh network. The plot is saved as `eval_{type}.png`.
+On your webpage, you should include the f1-score curve at different thresholds for voxelgrid, pointcloud and the mesh network. The plot is saved as `eval_{type}.png`.
 
 ### 2.5. Analyse effects of hyperparms variations (10 points)
 Analyse the results, by varying an hyperparameter of your choice.
