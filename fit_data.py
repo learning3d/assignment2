@@ -31,7 +31,7 @@ def fit_mesh(mesh_src, mesh_tgt, args):
     start_iter = 0
     start_time = time.time()
 
-    deform_vertices_src = torch.zeros(mesh_src.verts_packed().shape, requires_grad=True, device='cuda')
+    deform_vertices_src = torch.zeros(mesh_src.verts_packed().shape, requires_grad=True, device=args.device)
     optimizer = torch.optim.Adam([deform_vertices_src], lr = args.lr)
     print("Starting training !")
     for step in range(start_iter, args.max_iter):
@@ -56,8 +56,9 @@ def fit_mesh(mesh_src, mesh_tgt, args):
 
         loss_vis = loss.cpu().item()
 
-        print("[%4d/%4d]; ttime: %.0f (%.2f); loss: %.3f" % (step, args.max_iter, total_time,  iter_time, loss_vis))        
-    
+        if (step % args.log_freq) == 0:
+            print("[%4d/%4d]; ttime: %.0f (%.2f); loss: %.3f" % (step, args.max_iter, total_time,  iter_time, loss_vis))        
+
     mesh_src.offset_verts_(deform_vertices_src)
 
     print('Done!')
@@ -81,8 +82,9 @@ def fit_pointcloud(pointclouds_src, pointclouds_tgt, args):
 
         loss_vis = loss.cpu().item()
 
-        print("[%4d/%4d]; ttime: %.0f (%.2f); loss: %.3f" % (step, args.max_iter, total_time,  iter_time, loss_vis))
-    
+        if (step % args.log_freq) == 0:
+            print("[%4d/%4d]; ttime: %.0f (%.2f); loss: %.3f" % (step, args.max_iter, total_time,  iter_time, loss_vis))
+
     print('Done!')
 
 
@@ -104,8 +106,9 @@ def fit_voxel(voxels_src, voxels_tgt, args):
 
         loss_vis = loss.cpu().item()
 
-        print("[%4d/%4d]; ttime: %.0f (%.2f); loss: %.3f" % (step, args.max_iter, total_time,  iter_time, loss_vis))
-    
+        if (step % args.log_freq) == 0:
+            print("[%4d/%4d]; ttime: %.0f (%.2f); loss: %.3f" % (step, args.max_iter, total_time,  iter_time, loss_vis))
+
     print('Done!')
 
 
