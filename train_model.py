@@ -13,19 +13,19 @@ def get_args_parser():
     parser = argparse.ArgumentParser('Singleto3D', add_help=False)
     # Model parameters
     parser.add_argument('--arch', default='resnet18', type=str)
-    parser.add_argument('--lr', default=4e-4, type=str)
-    parser.add_argument('--max_iter', default=10000, type=str)
-    parser.add_argument('--log_freq', default=1000, type=str)
-    parser.add_argument('--batch_size', default=2, type=str)
-    parser.add_argument('--num_workers', default=0, type=str)
+    parser.add_argument('--lr', default=4e-4, type=float)
+    parser.add_argument('--max_iter', default=10000, type=int)
+    parser.add_argument('--log_freq', default=1000, type=int)
+    parser.add_argument('--batch_size', default=2, type=int)
+    parser.add_argument('--num_workers', default=0, type=int)
     parser.add_argument('--type', default='vox', choices=['vox', 'point', 'mesh'], type=str)
     parser.add_argument('--n_points', default=5000, type=int)
     parser.add_argument('--w_chamfer', default=1.0, type=float)
     parser.add_argument('--w_smooth', default=0.1, type=float)
-    parser.add_argument('--save_freq', default=10000, type=int)    
-    parser.add_argument('--device', default='cuda', type=str) 
-    parser.add_argument('--load_feat', action='store_true') 
-    parser.add_argument('--load_checkpoint', action='store_true')            
+    parser.add_argument('--save_freq', default=10000, type=int)
+    parser.add_argument('--device', default='cuda', type=str)
+    parser.add_argument('--load_feat', action='store_true')
+    parser.add_argument('--load_checkpoint', action='store_true')
     return parser
 
 def preprocess(feed_dict,args):
@@ -126,7 +126,8 @@ def train_model(args):
                 'optimizer_state_dict': optimizer.state_dict()
                 }, f'checkpoint_{args.type}.pth')
 
-        print("[%4d/%4d]; ttime: %.0f (%.2f, %.2f); loss: %.3f" % (step, args.max_iter, total_time, read_time, iter_time, loss_vis))
+        if (step % args.log_freq) == 0:
+            print("[%4d/%4d]; ttime: %.0f (%.2f, %.2f); loss: %.3f" % (step, args.max_iter, total_time, read_time, iter_time, loss_vis))
 
     print('Done!')
 
