@@ -133,5 +133,6 @@ In the extended dataset, we provide a `split_3c.json` file that specifies the tr
 
 Update `dataset_location.py` so that we train the 3D reconstruction model on an extended dataset containing three classes (chair, car, and plane). Choose at least one of three models (voxel, point cloud, or mesh) to train and evaluate.
 
-Compare the quantitative and qualitative results of training on one class VS training on three classes. Explain your thoughts and analysis.
+After training, compare the quantitative and qualitative results of "training on one class" VS "training on three classes". Explain your thoughts and analysis.
+
 (Hints: for example, given the same testing samples in `chair` class, how does F1 score change comparing "training on one class" and "training on three classes"? How does the 3D consistency / diversity of the output samples change?)
