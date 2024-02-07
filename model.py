@@ -19,7 +19,7 @@ class SingleViewto3D(nn.Module):
         # define decoder
         if args.type == "vox":
             # Input: b x 512
-            # Output: b x 1 x 32 x 32 x 32
+            # Output: b x 32 x 32 x 32
             pass
             # TODO:
             # self.decoder =             

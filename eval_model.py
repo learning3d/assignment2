@@ -15,10 +15,9 @@ import matplotlib.pyplot as plt
 def get_args_parser():
     parser = argparse.ArgumentParser('Singleto3D', add_help=False)
     parser.add_argument('--arch', default='resnet18', type=str)
-    parser.add_argument('--max_iter', default=10000, type=str)
-    parser.add_argument('--vis_freq', default=1000, type=str)
-    parser.add_argument('--batch_size', default=1, type=str)
-    parser.add_argument('--num_workers', default=0, type=str)
+    parser.add_argument('--vis_freq', default=1000, type=int)
+    parser.add_argument('--batch_size', default=1, type=int)
+    parser.add_argument('--num_workers', default=0, type=int)
     parser.add_argument('--type', default='vox', choices=['vox', 'point', 'mesh'], type=str)
     parser.add_argument('--n_points', default=5000, type=int)
     parser.add_argument('--w_chamfer', default=1.0, type=float)
@@ -117,7 +116,7 @@ def evaluate_model(args):
         drop_last=True)
     eval_loader = iter(loader)
 
-    model =  SingleViewto3D(args)
+    model = SingleViewto3D(args)
     model.to(args.device)
     model.eval()
 

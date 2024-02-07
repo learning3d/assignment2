@@ -165,7 +165,7 @@ class R2N2(ShapeNetBase):  # pragma: no cover
                 # Examine if the given model is present in the ShapeNetCore path.
                 shapenet_path = path.join(shapenet_dir, synset, model)
                 if not path.isdir(shapenet_path):
-                    msg = "Model %s from category %s is not present in %s." % (
+                    msg = "Model %s from category %s is not present in %s. Skip it." % (
                         model,
                         synset,
                         shapenet_dir,
@@ -264,7 +264,9 @@ class R2N2(ShapeNetBase):  # pragma: no cover
         try:
             verts, faces, textures = self._load_mesh(model_path)
         except Exception:
-            st()
+            raise FileNotFoundError(
+                f"model_path {model_path} not found in {self.shapenet_dir}"
+            )
         model["verts"] = verts
         model["faces"] = faces
         # model["textures"] = textures
