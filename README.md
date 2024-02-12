@@ -128,7 +128,7 @@ Some papers for inspiration [[1](https://arxiv.org/abs/2003.04618),[2](https://a
 Implement a parametric function that takes in as input sampled 2D points and outputs their respective 3D points. 
 Some papers for inspiration [[1](https://arxiv.org/abs/1802.05384),[2](https://arxiv.org/abs/1811.10943)]
 
-### 3.3 Entended dataset for training (10 points)
+### 3.3 Extended dataset for training (10 points)
 In the extended dataset, we provide a `split_3c.json` file that specifies the train/test split for the extended dataset.
 
 Update `dataset_location.py` so that we train the 3D reconstruction model on an extended dataset containing three classes (chair, car, and plane). Choose at least one of three models (voxel, point cloud, or mesh) to train and evaluate.
