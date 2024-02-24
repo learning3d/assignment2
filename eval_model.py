@@ -11,6 +11,9 @@ from pytorch3d.ops import knn_points
 import mcubes
 import utils_vox
 import matplotlib.pyplot as plt 
+from pytorch3d.transforms import Rotate, axis_angle_to_matrix
+import math
+import numpy as np
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Singleto3D', add_help=False)
@@ -92,13 +95,22 @@ def evaluate(predictions, mesh_gt, thresholds, args):
         mesh_src = pytorch3d.structures.Meshes([vertices_src], [faces_src])
         pred_points = sample_points_from_meshes(mesh_src, args.n_points)
         pred_points = utils_vox.Mem2Ref(pred_points, H, W, D)
+        # Apply a rotation transform to align predicted voxels to gt mesh
+        angle = -math.pi
+        axis_angle = torch.as_tensor(np.array([[0.0, angle, 0.0]]))
+        Rot = axis_angle_to_matrix(axis_angle)
+        T_transform = Rotate(Rot)
+        pred_points = T_transform.transform_points(pred_points)
+        # re-center the predicted points
+        pred_points = pred_points - pred_points.mean(1, keepdim=True)
     elif args.type == "point":
         pred_points = predictions.cpu()
     elif args.type == "mesh":
         pred_points = sample_points_from_meshes(predictions, args.n_points).cpu()
 
     gt_points = sample_points_from_meshes(mesh_gt, args.n_points)
-    
+    if args.type == "vox":
+        gt_points = gt_points - gt_points.mean(1, keepdim=True)
     metrics = compute_sampling_metrics(pred_points, gt_points, thresholds)
     return metrics
 
@@ -149,9 +161,6 @@ def evaluate_model(args):
         read_time = time.time() - read_start_time
 
         predictions = model(images_gt, args)
-
-        if args.type == "vox":
-            predictions = predictions.permute(0,1,4,3,2)
 
         metrics = evaluate(predictions, mesh_gt, thresholds, args)
 
