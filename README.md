@@ -7,9 +7,10 @@ Goals: In this assignment, you will explore the types of loss and decoder functi
 Please download and extract the dataset from the shared Google Drive. 
 
 We provide two versions for the dataset, 
-* [here](https://drive.google.com/file/d/1fRaJevvaW_B_ZLb67dqARzJvk7gYGMbG/view?usp=sharing) for a single-class dataset which contains one class of chair. Total size 7.3G after unzipping.
 
-* [here](https://drive.google.com/file/d/1SpJycuBfSmOjVtmbYOs3vEIF83AMIzgD/view?usp=sharing) for an extended version which contains three classes, chair, plane, and car.  Total size 48G after unzipping.
+* [here](https://drive.google.com/file/d/1zstWMuBYexHoV6UKgtZvUDK_1Gpxts00/view?usp=sharing) for a single-class dataset which contains one class of chair. Total size 7.3G after unzipping.
+
+* [here](https://drive.google.com/file/d/1zqH4sMlOkhqvJhni13jh9tgkoQCIL3Xz/view?usp=sharing) for an extended version which contains three classes, chair, plane, and car.  Total size 48G after unzipping.
 
 Note: if you are working on remote machine, you can use `gdown https://drive.google.com/uc?id=<file_id>` command in terminal to download the zip file.
 
