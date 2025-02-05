@@ -2,19 +2,33 @@
 
 Goals: In this assignment, you will explore the types of loss and decoder functions for regressing to voxels, point clouds, and mesh representation from single view RGB input. 
 
+## Table of Contents
+0. [Setup](#0-setup)
+1. [Exploring Loss Functions](#1-exploring-loss-functions)
+2. [Reconstructing 3D from single view](#2-reconstructing-3d-from-single-view)
+3. [Exploring other architectures / datasets](#3-exploring-other-architectures--datasets-choose-at-least-one-more-than-one-is-extra-credit)
 ## 0. Setup
 
-Please download and extract the dataset from the shared Google Drive. 
+Please download and extract the dataset for this assigment. We provide two versions for the dataset, which are hosted on huggingface. 
 
-We provide two versions for the dataset, 
+* [here](https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset) for a single-class dataset which contains one class of chair. Total size 7.3G after unzipping.
 
-* [here](https://drive.google.com/file/d/1zstWMuBYexHoV6UKgtZvUDK_1Gpxts00/view?usp=sharing) for a single-class dataset which contains one class of chair. Total size 7.3G after unzipping.
+Download the dataset using the following commands:
 
-* [here](https://drive.google.com/file/d/1zqH4sMlOkhqvJhni13jh9tgkoQCIL3Xz/view?usp=sharing) for an extended version which contains three classes, chair, plane, and car.  Total size 48G after unzipping.
+```
+$ sudo apt install git-lfs
+$ git lfs install
+$ git clone https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset
+```
 
-Note: if you are working on remote machine, you can use `gdown https://drive.google.com/uc?id=<file_id>` command in terminal to download the zip file.
+* [here](https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset_full) for an extended version which contains three classes, chair, plane, and car.  Total size 48G after unzipping. Download this dataset with the following command:
 
-After unzipping, set the appropriate path references in `dataset_location.py` file [here](dataset_location.py).
+```
+$ git lfs install
+$ git clone https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset_full
+```
+
+Downloading the datasets may take a few minutes. After unzipping, set the appropriate path references in `dataset_location.py` file [here](dataset_location.py).
 
 The extended version is required for Q3.3; for other parts, using single-class version is sufficient.
 
