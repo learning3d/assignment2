@@ -11,29 +11,30 @@ Goals: In this assignment, you will explore the types of loss and decoder functi
 
 Please download and extract the dataset for this assigment. We provide two versions for the dataset, which are hosted on huggingface. 
 
-* [here](https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset) for a single-class dataset which contains one class of chair. Total size 7.3G after unzipping.
+[Here](https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset) for a single-class dataset which contains one class of chair. Total size 7.3G after unzipping.
 
 Download the dataset using the following commands:
 
 ```
-$ sudo apt install git-lfs
-$ git lfs install
-$ git clone https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset
+sudo apt install git-lfs
+git lfs install
+cd assignment2
+git clone https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset
+mv r2n2_shapenet_dataset/r2n2_shapenet_dataset.zip .
+unzip r2n2_shapenet_dataset.zip
 ```
 
-* [here](https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset_full) for an extended version which contains three classes, chair, plane, and car.  Total size 48G after unzipping. Download this dataset with the following command:
+[Here](https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset_full) for an extended version which contains three classes, chair, plane, and car.  Total size 48G after unzipping. Download this dataset with the following command:
 
 ```
-$ git lfs install
-$ git clone https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset_full
+git clone https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset_full
 ```
 
-Downloading the datasets may take a few minutes. After unzipping, set the appropriate path references in `dataset_location.py` file [here](dataset_location.py).
+Downloading the datasets may take a few minutes, but the process is not stuck. After unzipping, set the appropriate path references in `dataset_location.py` file [here](dataset_location.py).
 
 The extended version is required for Q3.3; for other parts, using single-class version is sufficient.
 
 Make sure you have installed the packages mentioned in `requirements.txt`.
-This assignment will need the GPU version of pytorch.
 
 ## 1. Exploring loss functions
 This section will involve defining a loss function, for fitting voxels, point clouds and meshes.
