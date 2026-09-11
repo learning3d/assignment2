@@ -9,6 +9,18 @@ Goals: In this assignment, you will explore the types of loss and decoder functi
 3. [Exploring other architectures / datasets](#3-exploring-other-architectures--datasets-choose-at-least-one-more-than-one-is-extra-credit)
 ## 0. Setup
 
+### Environment (PyTorch / PyTorch3D)
+
+Install **PyTorch and PyTorch3D following Assignment 1** or use the same venv/conda env. 
+
+Then install the remaining packages:
+
+```
+pip install -r requirements.txt
+```
+
+If the PyTorch3D source install fails with `ModuleNotFoundError: No module named 'torch'`, retry with `--no-build-isolation` as in A1.
+
 Please download and extract the dataset for this assigment. We provide two versions for the dataset, which are hosted on huggingface. 
 
 [Here](https://huggingface.co/datasets/learning3dvision/r2n2_shapenet_dataset) for a single-class dataset which contains one class of chair. Total size 7.3G after unzipping.
@@ -119,7 +131,7 @@ Quantitatively compare the F1 score of 3D reconstruction for meshes vs pointclou
 Provide an intutive explaination justifying the comparision.
 
 For evaluating you can run:
-`python eval_model.py --type voxel|mesh|point --load_checkpoint`
+`python eval_model.py --type vox|mesh|point --load_checkpoint`
 
 
 On your webpage, you should include the f1-score curve at different thresholds for voxelgrid, pointcloud and the mesh network. The plot is saved as `eval_{type}.png`.
