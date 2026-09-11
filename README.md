@@ -48,10 +48,10 @@ The extended version is required for Q3.3; for other parts, using single-class v
 
 Make sure you have installed the packages mentioned in `requirements.txt`.
 
-## 1. Exploring loss functions
+## 1. Exploring loss functions (10 points)
 This section will involve defining a loss function, for fitting voxels, point clouds and meshes.
 
-### 1.1. Fitting a voxel grid (5 points)
+### 1.1. Fitting a voxel grid (4 points)
 In this subsection, we will define binary cross entropy loss that can help us <b>fit a 3D binary voxel grid</b>.
 Define the loss functions `voxel_loss` in [`losses.py`](losses.py) file. 
 For this you can use the pre-defined losses in pytorch library.
@@ -60,7 +60,7 @@ Run the file `python fit_data.py --type 'vox'`, to fit the source voxel grid to 
 
 Visualize the optimized voxel grid along-side the ground truth voxel grid using the tools learnt in previous section.
 
-### 1.2. Fitting a point cloud (5 points)
+### 1.2. Fitting a point cloud (3 points)
 In this subsection, we will define chamfer loss that can help us <b> fit a 3D point cloud </b>.
 Define the loss functions `chamfer_loss` in [`losses.py`](losses.py) file.
 <b>We expect you to write your own code for this and not use any pytorch3d utilities. You are allowed to use functions inside pytorch3d.ops.knn such as knn_gather or knn_points</b>
@@ -69,7 +69,7 @@ Run the file `python fit_data.py --type 'point'`, to fit the source point cloud 
 
 Visualize the optimized point cloud along-side the ground truth point cloud using the tools learnt in previous section.
 
-### 1.3. Fitting a mesh (5 points)
+### 1.3. Fitting a mesh (3 points)
 In this subsection, we will define an additional smoothening loss that can help us <b> fit a mesh</b>.
 Define the loss functions `smoothness_loss` in [`losses.py`](losses.py) file.
 
@@ -79,7 +79,7 @@ Run the file `python fit_data.py --type 'mesh'`, to fit the source mesh to the t
 
 Visualize the optimized mesh along-side the ground truth mesh using the tools learnt in previous section.
 
-## 2. Reconstructing 3D from single view
+## 2. Reconstructing 3D from single view (80 points)
 This section will involve training a single view to 3D pipeline for voxels, point clouds and meshes.
 Refer to the `save_freq` argument in `train_model.py` to save the model checkpoint quicker/slower. 
 
@@ -98,6 +98,8 @@ You need to add the respective visualization code in `eval_model.py`
 
 On your webpage, you should include visuals of any three examples in the test set. For each example show the input RGB, render of the predicted 3D voxel grid and a render of the ground truth mesh.
 
+Also report the F1@0.05 score and include the F1 plot, which is saved as `eval_vox.png`.
+
 ### 2.2. Image to point cloud (20 points)
 In this subsection, we will define a neural network to decode point clouds.
 Similar as above, define the decoder network in [`model.py`](model.py) file for `point` type, then reference your decoder in [`model.py`](model.py) file.
@@ -111,13 +113,13 @@ You need to add the respective visualization code in `eval_model.py`.
 
 On your webpage, you should include visuals of any three examples in the test set. For each example show the input RGB, render of the predicted 3D point cloud and a render of the ground truth mesh.
 
+Also report the F1@0.05 score and include the F1 plot, which is saved as `eval_point.png`.
 
 ### 2.3. Image to mesh (20 points)
 In this subsection, we will define a neural network to decode mesh.
 Similar as above, define the decoder network in [`model.py`](model.py) file for `mesh` type, then reference your decoder in [`model.py`](model.py) file.
 
 Run the file `python train_model.py --type 'mesh'`, to train single view to mesh pipeline, feel free to tune the hyperparameters as per your need. We also encourage the student to try different mesh initializations (i.e. replace `ico_sphere` by other shapes).
-
 
 After trained, visualize the input RGB, ground truth mesh and predicted mesh in `eval_model.py` file using:
 `python eval_model.py --type 'mesh' --load_checkpoint`
@@ -126,22 +128,14 @@ You need to add the respective visualization code in `eval_model.py`.
 
 On your webpage, you should include visuals of any three examples in the test set. For each example show the input RGB, render of the predicted mesh and a render of the ground truth mesh.
 
-### 2.4. Quantitative comparisions(10 points)
-Quantitatively compare the F1 score of 3D reconstruction for meshes vs pointcloud vs voxelgrids.
-Provide an intutive explaination justifying the comparision.
+Also report the F1@0.05 score and include the F1 plot, which is saved as `eval_mesh.png`. Additionally, quantitatively compare the F1 score of 3D reconstruction for meshes vs pointcloud vs voxel grids. Provide an intuitive explaination justifying the comparision.
 
-For evaluating you can run:
-`python eval_model.py --type vox|mesh|point --load_checkpoint`
-
-
-On your webpage, you should include the f1-score curve at different thresholds for voxelgrid, pointcloud and the mesh network. The plot is saved as `eval_{type}.png`.
-
-### 2.5. Analyse effects of hyperparams variations (10 points)
+### 2.4. Analyse effects of hyperparams variations (10 points)
 Analyse the results, by varying a hyperparameter of your choice.
 For example `n_points` or `vox_size` or `w_chamfer` or `initial mesh (ico_sphere)` etc.
 Try to be unique and conclusive in your analysis.
 
-### 2.6. Interpret your model (15 points)
+### 2.5. Interpret your model (10 points)
 Simply seeing final predictions and numerical evaluations is not always insightful. Can you create some visualizations that help highlight what your learned model does? Be creative and think of what visualizations would help you gain insights. There is no `right' answer - although reading some papers to get inspiration might give you ideas.
 
 
