@@ -141,8 +141,10 @@ Simply seeing final predictions and numerical evaluations is not always insightf
 
 ## 3. Exploring other architectures / datasets. (Choose at least one! More than one is extra credit)
 
+For the question(s) chosen, show visualization examples similar to what you did in Q2, report the F1 score, etc. and comment on how this new architecture/dataset affects the results.
+
 ### 3.1 Implicit network (10 points)
-Implement an implicit decoder that takes in as input 3D locations and outputs the occupancy value. Start with a simple implementation of a network that predicts the occupancy given the image feture and a 3d coordinate as input. You will need to create a meshgrid of 32x32x32 in the normalized coordinate space of (-1,1)^3 to predict the full occupancy output. 
+Implement an implicit decoder that takes in as input 3D locations and outputs the occupancy value. Start with a simple implementation of a network that predicts the occupancy given the image feature and a 3d coordinate as input. You will need to create a meshgrid of 32x32x32 in the normalized coordinate space of (-1,1)^3 to predict the full occupancy output. 
 
 Some papers for inspiration [[1](https://arxiv.org/abs/2003.04618),[2](https://arxiv.org/abs/1812.03828)]
 
